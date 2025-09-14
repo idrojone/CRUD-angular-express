@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-list-conciertos',
   imports: [CommonModule, FormsModule],
   templateUrl: './conciertos.html',
-  styleUrl: './conciertos.css',
+  styleUrls: ['./conciertos.css'], 
   standalone: true
 })
 export class Conciertos implements OnInit {

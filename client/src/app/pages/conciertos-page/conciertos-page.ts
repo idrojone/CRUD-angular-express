@@ -5,7 +5,7 @@ import { Conciertos } from '../../components/list-conciertos/list-conciertos';
   selector: 'app-conciertos-page',
   imports: [Conciertos],
   templateUrl: './conciertos-page.html',
-  styleUrl: './conciertos-page.css',
+  styleUrls: ['./conciertos-page.css'],
   standalone: true
 })
 export class ConciertosPage { }

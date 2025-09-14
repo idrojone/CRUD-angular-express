@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { Conciertos } from './components/list-conciertos/list-conciertos';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Conciertos],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
