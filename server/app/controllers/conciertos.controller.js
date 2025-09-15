@@ -1,126 +1,96 @@
-const db = require("../models");
-const Concierto = db.conciertos;
+const mongoose = require('mongoose');
+const Concierto = mongoose.model('Concierto');
 
 
-//  CREATE 
-// {
-//     "titulo": "title_1",
-//     "description": "description_1"
-// }
 
-exports.create = (req, res) => {
-    if (!req.body.titulo) {
-        res.status(400).send({ message: "Content can not be empty!" });
-        return;
+async function getall_conciertos(req, res) {
+    try {
+        const conciertos = await Concierto.find();
+        res.json(conciertos);
+    } catch (error) {
+        res.status(500).json("Ha ocurrido un error", res.statusCode);
     }
+}
 
-    const concierto = new Concierto({
-        titulo: req.body.titulo,
-        description: req.body.description,
-    });
+async function getone_concierto(req, res) {
+    try {
+        const id = req.params.id;
+        const concierto = await Concierto.findById(id);
+        if (!concierto) {
+            res.status(404).json("Concierto no encontrado", res.statusCode);
+        } else {
+            res.json(concierto);
+        }
+    } catch (error) {
+        if (error.kind === 'ObjectId') { 
+            res.status(404).json("Concierto no encontrado", res.statusCode); 
+        } else {
+            res.status(500).json("Ha ocurrido un error", res.statusCode);
+        }
 
-    concierto
-        .save(concierto)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the Concierto."
-            });
-        });
-};
-
-exports.findAll = (req, res) => {
-    const titulo = req.query.titulo;
-    var condition = titulo ? { titulo: { $regex: new RegExp(titulo), $options: "i" } } : {};
-
-    Concierto.find(condition)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving Conciertos."
-            });
-        });
-};
-
-exports.findOne = (req, res) => {
-    const id = req.params.id;
-
-    Concierto.findById(id)
-        .then(data => {
-            if (!data)
-                res.status(404).send({ message: "Not found Concierto with id " + id });
-            else res.send(data);
-        })
-        .catch(err => {
-            res
-                .status(500)
-                .send({ message: "Error retrieving Concierto with id=" + id });
-        });
-};
-
-exports.update = (req, res) => {
-    if (!req.body) {
-        return res.status(400).send({
-            message: "Data to update can not be empty!"
-        });
     }
+}
 
-    const id = req.params.id;
+async function create_concierto(req, res) {
+    try {
+        const concierto_data = {
+            name: req.body.name,
+            description: req.body.description 
+        }
+        const concierto = new Concierto(concierto_data);
+        const new_concierto = await concierto.save();
+        res.json(new_concierto)
+    } catch (error) {
+        res.status(500).json("Ha ocurrido un error", res.statusCode);
+    }
+}
 
-    Concierto.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-        .then(data => {
-            if (!data) {
-                res.status(404).send({
-                    message: `Cannot update Concierto with id=${id}. Maybe Concierto was not found!`
-                });
-            } else res.send({ message: "Concierto was updated successfully." });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating Concierto with id=" + id
-            });
-        });
-};
+async function delete_concierto(req, res) {
+    try {
+        const id = req.params.id;
+        const concierto = await Concierto.findByIdAndDelete(id);
+        if (concierto) {
+            res.json(concierto);
+        }
+    } catch (error) {
+        if (error.kind === 'ObjectId') { 
+            res.status(404).json("Product not found", res.statusCode); 
+        }
+        else { 
+            res.status(500).json("An error has ocurred", res.statusCode); 
+        }
+    }
+}
 
-exports.delete = (req, res) => {
-    const id = req.params.id;
+async function update_concierto(req, res) {
+    try {
+        const id = req.params.id;
+        const old_concierto = await Concierto.findById(id);
 
-    Concierto.findByIdAndDelete(id)
-        .then(data => {
-            if (!data) {
-                res.status(404).send({
-                    message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
-                });
-            } else {
-                res.send({
-                    message: "Tutorial was deleted successfully!"
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete Tutorial with id=" + id
-            });
-        });
-};
+        if (!old_concierto) {
+            return res.status(404).json("Concierto no encontrado");
+        }
 
-exports.deleteAll = (req, res) => {
-    Concierto.deleteMany({})
-        .then(data => {
-            res.send({
-                message: `${data.deletedCount} Tutorials were deleted successfully!`
-            });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while removing all tutorials."
-            });
-        });
-};
+        old_concierto.name = req.body.name || old_concierto.name;
+        old_concierto.description = req.body.description || old_concierto.description;
+        const updated_concierto = await old_concierto.save();
+
+        res.json({ msg: "Concierto actualizado", concierto: updated_concierto });
+    } catch (error) {
+        if (error.kind === 'ObjectId') {
+            res.status(404).json("Concierto no encontrado");
+        } else {
+            res.status(500).json("Ha ocurrido un error");
+        }
+    }
+}
+
+const concierto_controller = {
+    getall_conciertos: getall_conciertos,
+    getone_concierto: getone_concierto,
+    create_concierto: create_concierto,
+    delete_concierto: delete_concierto,
+    update_concierto: update_concierto,
+}
+
+module.exports = concierto_controller;
