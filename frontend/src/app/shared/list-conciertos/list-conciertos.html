@@ -1,0 +1,11 @@
+<!-- <p>list-conciertos works!</p> -->
+<div *ngFor="let concierto of conciertos">
+    <li>{{ concierto.name }} - {{ concierto.description }}</li>
+</div>
+<!-- <div *ngFor="let concierto of conciertos">
+    <app-card-concierto [concierto]="concierto"></app-card-concierto>
+</div> -->
+<ng-template #noConciertos>
+    <p>No hay conciertos disponibles.</p>
+</ng-template>
+<app-footer></app-footer>
