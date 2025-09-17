@@ -23,4 +23,12 @@ export class ApiService {
     delete(path: string, id: string, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> { 
         return this.http.delete(`${environment.api_url}${path}/${id}`, options).pipe(catchError(this.formatErrors));
     }
+
+    post(path: string, body: Object = {}, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> {
+        return this.http.post(`${environment.api_url}${path}`, body, options).pipe(catchError(this.formatErrors));
+    }
+
+    put(path: string, body: Object = {}, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> {
+        return this.http.put(`${environment.api_url}${path}`, body, options).pipe(catchError(this.formatErrors));
+    }
 }

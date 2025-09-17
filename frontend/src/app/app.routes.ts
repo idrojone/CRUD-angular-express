@@ -11,6 +11,8 @@ export const routes: Routes = [
         path: 'conciertos', loadComponent: () => import('./pages/conciertos/conciertos').then(m => m.Conciertos)
     }, 
     {
-        path: 'conciertos/:id', loadComponent: () => import('./pages/conciertos/conciertos').then(m => m.Conciertos)
+        path: 'conciertos/id/:id', loadComponent: () => import('./shared/add-concierto/add-concierto').then(m => m.AddConcierto)
+    }, {
+        path: 'conciertos/add', loadComponent: () => import('./shared/add-concierto/add-concierto').then(m => m.AddConcierto)
     }
 ];
