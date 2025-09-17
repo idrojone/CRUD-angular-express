@@ -4,13 +4,15 @@ import { OnInit } from '@angular/core';
 import { ApiService } from '../../core/services/index';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { CardConciertos } from '../card-conciertos/card-conciertos';
 
 @Component({
     selector: 'app-list-conciertos',
     imports: [
         Footer,
         HttpClientModule,
-        CommonModule
+        CommonModule,
+        CardConciertos
     ],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
@@ -31,8 +33,9 @@ export class ListConciertos implements OnInit {
     getConciertos(): void {
         this.ApiService.get('/api/conciertos', {}).subscribe(
             (data) => {
-                console.log(data);
-                this.conciertos = data;
+                this.conciertos = Array.isArray(data) ? [...data] : Object.values(data);
+                console.log(this.conciertos);
+                // this.conciertos = data;
             },
             (error) => {
                 console.error('Error fetching conciertos:', error);

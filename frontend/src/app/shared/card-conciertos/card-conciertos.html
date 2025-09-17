@@ -1,0 +1,14 @@
+<div class="card" [attr.data-concierto-id]="concierto._id">
+    <div class="card-body">
+        <h5 class="card-title">{{ concierto.name }}</h5>
+        <p class="card-text">{{ concierto.description }}</p>
+        <p class="card-price">{{ concierto.price }}</p>
+        <p class="card-place">{{ concierto.place }}</p>
+    </div>
+    <div class="card-actions">
+        <button class="btn btn-primary" [routerLink]="[`/conciertos/${concierto._id}`, concierto._id]">Editar</button>
+        <button class="btn btn-danger" (click)="deleteConcierto(concierto)" >Eliminar</button>
+    </div>
+</div>
+
+<!-- @for  -->

@@ -19,4 +19,8 @@ export class ApiService {
     get(path: string, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> {
         return this.http.get(`${environment.api_url}${path}`, options).pipe(catchError(this.formatErrors));
     }
+
+    delete(path: string, id: string, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> { 
+        return this.http.delete(`${environment.api_url}${path}/${id}`, options).pipe(catchError(this.formatErrors));
+    }
 }

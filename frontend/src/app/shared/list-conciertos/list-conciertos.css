@@ -1,0 +1,20 @@
+.list-conciertos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 16px;
+}
+
+.list-conciertos app-card-conciertos {
+    flex: 1 1 calc(33.333% - 32px); /* Adjusts to 3 cards per row with spacing */
+    max-width: calc(33.333% - 32px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.list-conciertos app-card-conciertos:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}

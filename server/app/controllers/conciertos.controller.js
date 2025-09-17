@@ -35,7 +35,9 @@ async function create_concierto(req, res) {
     try {
         const concierto_data = {
             name: req.body.name,
-            description: req.body.description 
+            description: req.body.description ,
+            price: req.body.price,
+            place: req.body.price
         }
         const concierto = new Concierto(concierto_data);
         const new_concierto = await concierto.save();
@@ -73,6 +75,8 @@ async function update_concierto(req, res) {
 
         old_concierto.name = req.body.name || old_concierto.name;
         old_concierto.description = req.body.description || old_concierto.description;
+        old_concierto.price = req.body.price || old_concierto.price;
+        old_concierto.place = req.body.place || old_concierto.place;
         const updated_concierto = await old_concierto.save();
 
         res.json({ msg: "Concierto actualizado", concierto: updated_concierto });
