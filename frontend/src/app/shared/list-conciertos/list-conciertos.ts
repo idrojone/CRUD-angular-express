@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Footer } from '../layout/footer/footer';
-import { OnInit } from '@angular/core'; 
+import { OnInit } from '@angular/core';
 import { ApiService } from '../../core/services/index';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -21,11 +21,11 @@ import { CardConciertos } from '../card-conciertos/card-conciertos';
 export class ListConciertos implements OnInit {
 
     conciertos: any[] = [];
-    
+
     constructor(
         private ApiService: ApiService
     ) { }
-    
+
     ngOnInit(): void {
         this.getConciertos();
     }
@@ -33,13 +33,16 @@ export class ListConciertos implements OnInit {
     getConciertos(): void {
         this.ApiService.get('/api/conciertos', {}).subscribe(
             (data) => {
-                this.conciertos = Array.isArray(data) ? [...data] : Object.values(data);
-                console.log(this.conciertos);
-                // this.conciertos = data;
+                console.log(data);
+                this.conciertos = data;
             },
             (error) => {
                 console.error('Error fetching conciertos:', error);
             }
         );
+    }
+
+    onConciertoEliminado(id: string): void {
+        this.conciertos = this.conciertos.filter(c => c._id !== id);
     }
 }

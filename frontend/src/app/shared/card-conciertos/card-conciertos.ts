@@ -1,42 +1,39 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Conciertos } from '../../core/models/conciertos.model'
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 
 @Component({
-  selector: 'app-card-conciertos',
-  imports: [
-    CommonModule,
-    RouterLink
-  ],
-  templateUrl: './card-conciertos.html',
-  styleUrl: './card-conciertos.css',
-  standalone: true,
+    selector: 'app-card-conciertos',
+    imports: [
+        CommonModule,
+        RouterLink
+    ],
+    templateUrl: './card-conciertos.html',
+    styleUrl: './card-conciertos.css',
+    standalone: true,
 })
 export class CardConciertos implements OnInit {
 
     @Input() concierto: Conciertos = {} as Conciertos;
+    @Output() conciertoEliminado = new EventEmitter<string>();
 
-    constructor(private apiService: ApiService, private router: Router) { }
+    constructor(
+        private apiService: ApiService
+    ) { }
 
     ngOnInit(): void {
         console.log(this.concierto);
     }
 
-    deleteConcierto(concierto: Conciertos): void {
-        console.log('Eliminando concierto:', concierto);
-        // console.log(concierto._id);
-        // return;
-        this.apiService.delete('/api/conciertos', concierto._id).subscribe({
+    deleteConcierto(): void {
+        console.log('Eliminando concierto:', this.concierto);
+
+        this.apiService.delete('/api/conciertos', this.concierto._id).subscribe({
             next: () => {
                 console.log('Concierto eliminado exitosamente');
-                this.concierto = this.concierto.filter(c => c._id !== concierto._id);
-                // this.concierto = {} as Conciertos;
-                // const cardElement = document.querySelector(`[data-concierto-id="${concierto._id}"]`);
-                // if (cardElement) {
-                //     cardElement.remove();
-                // }
+                this.conciertoEliminado.emit(this.concierto._id);
             },
             error: (err) => console.error('Error al eliminar el concierto:', err)
         });
