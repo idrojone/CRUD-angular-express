@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Conciertos } from '../../core/models/conciertos.model';
@@ -26,6 +26,7 @@ export class AddConcierto implements OnInit {
     };
 
     isEdit = false;
+
     formConcierto = new FormGroup({
         name: new FormControl('', Validators.required),
         description: new FormControl('', Validators.required),
@@ -33,11 +34,9 @@ export class AddConcierto implements OnInit {
         place: new FormControl('', Validators.required)
     });
 
-    constructor(
-        private apiService: ApiService,
-        private route: ActivatedRoute,
-        private router: Router
-    ) { }
+    apiService = inject(ApiService);
+    route = inject(ActivatedRoute)
+    router = inject(Router)
 
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {

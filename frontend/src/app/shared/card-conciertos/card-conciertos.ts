@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Conciertos } from '../../core/models/conciertos.model'
 import { Router, RouterLink } from '@angular/router';
@@ -19,9 +19,8 @@ export class CardConciertos implements OnInit {
     @Input() concierto: Conciertos = {} as Conciertos;
     @Output() conciertoEliminado = new EventEmitter<string>();
 
-    constructor(
-        private apiService: ApiService
-    ) { }
+    apiService = inject(ApiService);
+
 
     ngOnInit(): void {
         console.log(this.concierto);

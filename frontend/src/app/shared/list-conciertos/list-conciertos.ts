@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Footer } from '../layout/footer/footer';
 import { OnInit } from '@angular/core';
 import { ApiService } from '../../core/services/index';
@@ -23,9 +23,7 @@ export class ListConciertos implements OnInit {
 
     conciertos: any[] = [];
 
-    constructor(
-        private ApiService: ApiService
-    ) { }
+    ApiService = inject(ApiService);
 
     ngOnInit(): void {
         this.getConciertos();
