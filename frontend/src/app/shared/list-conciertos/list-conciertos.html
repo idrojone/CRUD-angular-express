@@ -1,12 +1,3 @@
-<!-- <p>list-conciertos works!</p> -->
-<!-- <div *ngFor="let concierto of conciertos">
-    <li>{{ concierto.name }} - {{ concierto.description }}</li>
-</div> -->
-<!-- <div class="list-conciertos">
-    <div *ngFor="let concierto of conciertos">
-            <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
-    </div>
-</div> -->
 <div class="list-conciertos">
     @for (concierto of conciertos; track concierto.slug) {
     <app-card-conciertos [concierto]="concierto" (conciertoEliminado)="onConciertoEliminado($event)">
@@ -15,5 +6,4 @@
     <p>No hay conciertos disponibles.</p>
     }
 </div>
-
-<app-footer></app-footer>
+<button class="btn btn-primary" [routerLink]="['/conciertos/add']">Añadir Concierto</button>

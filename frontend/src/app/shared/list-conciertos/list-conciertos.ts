@@ -5,15 +5,16 @@ import { ApiService } from '../../core/services/index';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-list-conciertos',
     imports: [
-        Footer,
-        HttpClientModule,
-        CommonModule,
-        CardConciertos
-    ],
+    HttpClientModule,
+    CommonModule,
+    CardConciertos,
+    RouterLink
+],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
     standalone: true
@@ -43,8 +44,6 @@ export class ListConciertos implements OnInit {
     }
 
     onConciertoEliminado(slug: string): void {
-        // console.log('Concierto eliminado con slug:', slug);
-        // return false;
         this.ApiService.delete('/api/conciertos', slug).subscribe({
             next: () => {
                 this.conciertos = this.conciertos.filter(c => c.slug !== slug);

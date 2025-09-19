@@ -30,12 +30,5 @@ export class CardConciertos implements OnInit {
     deleteConcierto(): void {
         console.log('Eliminando concierto:', this.concierto);
         this.conciertoEliminado.emit(this.concierto.slug);
-        // this.apiService.delete('/api/conciertos', this.concierto.slug).subscribe({
-        //     next: () => {
-        //         console.log('Concierto eliminado exitosamente');
-        //         this.conciertoEliminado.emit(this.concierto.slug);
-        //     },
-        //     error: (err) => console.error('Error al eliminar el concierto:', err)
-        // });
     }
 }

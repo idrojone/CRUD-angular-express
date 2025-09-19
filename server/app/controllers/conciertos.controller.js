@@ -44,7 +44,7 @@ async function create_concierto(req, res, next) {
             description: req.body.description,
             price: req.body.price,
             place: req.body.place,
-            slug: Math.random().toString(36).substring(2, 15) 
+            slug: slugify(req.body.name, { lower: true }) + '-' + Math.random().toString(36).substring(2, 15)
         }
         const concierto = new Concierto(concierto_data);
         const new_concierto = await concierto.save();
@@ -59,13 +59,16 @@ async function delete_concierto(req, res, next) {
     try {
         // const id = req.params.id;
         const slug = req.params.slug;
+        // console.log('Deleting concierto with slug:', slug);
         const concierto = await Concierto.findOne({ slug });
         if (concierto) {
-            res.json(concierto);
+            await Concierto.deleteOne({ slug });
+            res.json({ msg: "Concierto eliminado" });
+        } else {
+            return next(new AppError('Concierto no encontrado', 404));
         }
     } catch (error) {
-        if (error.kind === 'ObjectId') { 
-            // res.status(404).json("Product not found", res.statusCode); 
+        if (error.kind === 'ObjectId') {
             return next(new AppError('Concierto no encontrado', 404));
         }
         else { 
