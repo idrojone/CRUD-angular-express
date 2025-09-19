@@ -8,7 +8,7 @@
     </div>
 </div> -->
 <div class="list-conciertos">
-    @for (concierto of conciertos; track concierto._id) {
+    @for (concierto of conciertos; track concierto.slug) {
     <app-card-conciertos [concierto]="concierto" (conciertoEliminado)="onConciertoEliminado($event)">
     </app-card-conciertos>
     } @empty {

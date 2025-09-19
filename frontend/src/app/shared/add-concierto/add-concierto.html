@@ -1,7 +1,7 @@
-<p>add-concierto works!</p>
+<!-- <p>add-concierto works!</p> -->
 <h2>{{ isEdit ? 'Editar Concierto' : 'Añadir Concierto' }}</h2>
 
-<form (ngSubmit)="saveConcierto()">
+<!-- <form (ngSubmit)="saveConcierto()">
     <div>
         <label for="name">Nombre:</label>
         <input type="text" id="name" [(ngModel)]="concierto.name" name="name" required>
@@ -22,6 +22,30 @@
         <input type="text" id="place" [(ngModel)]="concierto.place" name="place" required>
     </div>
 
-    <button type="submit">{{ isEdit ? 'Actualizar' : 'Guardar' }}</button>
+    <button type="submit">{{ isEdit ? 'Actualizar' : 'Guardar' }}</button> -->
     <!-- <button type="button" (click)="newConcierto()">Limpiar</button> -->
+<!-- </form> -->
+
+<form [formGroup]="formConcierto" (ngSubmit)="saveConcierto()">
+    <div>
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" formControlName="name" required>
+    </div>
+
+    <div>
+        <label for="description">Descripción:</label>
+        <textarea id="description" formControlName="description" required></textarea>
+    </div>
+
+    <div>
+        <label for="price">Precio:</label>
+        <input type="number" id="price" formControlName="price" required>
+    </div>
+
+    <div>
+        <label for="place">Lugar:</label>
+        <input type="text" id="place" formControlName="place" required>
+    </div>
+
+    <button type="submit">{{ isEdit ? 'Actualizar' : 'Guardar' }}</button>
 </form>

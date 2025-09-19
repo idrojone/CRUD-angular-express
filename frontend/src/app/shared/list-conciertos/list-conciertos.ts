@@ -43,6 +43,14 @@ export class ListConciertos implements OnInit {
     }
 
     onConciertoEliminado(id: string): void {
+        this.ApiService.delete(`/api/conciertos/${id}`, {}).subscribe(
+            () => {
+                // this.removeConciertoFromList(id);
+            },
+            (error) => {
+                console.error('Error deleting concierto:', error);
+            }
+        );
         this.conciertos = this.conciertos.filter(c => c._id !== id);
     }
 }

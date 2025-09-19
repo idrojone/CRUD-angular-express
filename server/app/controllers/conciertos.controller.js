@@ -1,53 +1,61 @@
 const mongoose = require('mongoose');
 const Concierto = mongoose.model('Concierto');
+const slugify = require('slugify');
+const AppError = require('../utils/appError');
 
 
 
-async function getall_conciertos(req, res) {
+async function getall_conciertos(req, res, next) {
     try {
         const conciertos = await Concierto.find();
         res.json(conciertos);
     } catch (error) {
-        res.status(500).json("Ha ocurrido un error", res.statusCode);
+        // res.status(500).json("Ha ocurrido un error", res.statusCode);
+        return next(new AppError('Ha ocurrido un error', 500));
     }
 }
 
-async function getone_concierto(req, res) {
+async function getone_concierto(req, res, next) {
     try {
-        const id = req.params.id;
-        const concierto = await Concierto.findById(id);
+        const slug = req.params.slug;
+        const concierto = await Concierto.findOne({ slug });
         if (!concierto) {
-            res.status(404).json("Concierto no encontrado", res.statusCode);
+            // res.status(404).json("Concierto no encontrado", res.statusCode);
+            return next(new AppError('Concierto no encontrado', 404));
         } else {
             res.json(concierto);
         }
     } catch (error) {
         if (error.kind === 'ObjectId') { 
-            res.status(404).json("Concierto no encontrado", res.statusCode); 
+            // res.status(404).json("Concierto no encontrado", res.statusCode); 
+            return next(new AppError('Concierto no encontrado', 404));
         } else {
-            res.status(500).json("Ha ocurrido un error", res.statusCode);
+            // res.status(500).json("Ha ocurrido un error", res.statusCode);
+            return next(new AppError('Ha ocurrido un error', 500));
         }
 
     }
 }
 
-async function create_concierto(req, res) {
+async function create_concierto(req, res, next) {
     try {
         const concierto_data = {
             name: req.body.name,
-            description: req.body.description ,
+            description: req.body.description,
             price: req.body.price,
-            place: req.body.price
+            place: req.body.place,
+            slug: Math.random().toString(36).substring(2, 15) 
         }
         const concierto = new Concierto(concierto_data);
         const new_concierto = await concierto.save();
         res.json(new_concierto)
     } catch (error) {
-        res.status(500).json("Ha ocurrido un error", res.statusCode);
+        // res.status(500).json("Ha ocurrido un error", res.statusCode);
+        return next(new AppError('Ha ocurrido un error', 500));
     }
 }
 
-async function delete_concierto(req, res) {
+async function delete_concierto(req, res, next) {
     try {
         const id = req.params.id;
         const concierto = await Concierto.findByIdAndDelete(id);
@@ -56,21 +64,23 @@ async function delete_concierto(req, res) {
         }
     } catch (error) {
         if (error.kind === 'ObjectId') { 
-            res.status(404).json("Product not found", res.statusCode); 
+            // res.status(404).json("Product not found", res.statusCode); 
+            return next(new AppError('Concierto no encontrado', 404));
         }
         else { 
-            res.status(500).json("An error has ocurred", res.statusCode); 
+            // res.status(500).json("An error has ocurred", res.statusCode); 
+            return next(new AppError('Ha ocurrido un error', 500));
         }
     }
 }
 
-async function update_concierto(req, res) {
+async function update_concierto(req, res, next) {
     try {
-        const id = req.params.id;
-        const old_concierto = await Concierto.findById(id);
+        const slug = req.params.slug;
+        const old_concierto = await Concierto.findOne({ slug });
 
         if (!old_concierto) {
-            return res.status(404).json("Concierto no encontrado");
+            return next(new AppError('Concierto no encontrado', 404));
         }
 
         old_concierto.name = req.body.name || old_concierto.name;
@@ -82,9 +92,10 @@ async function update_concierto(req, res) {
         res.json({ msg: "Concierto actualizado", concierto: updated_concierto });
     } catch (error) {
         if (error.kind === 'ObjectId') {
-            res.status(404).json("Concierto no encontrado");
+            // res.status(404).json("Concierto no encontrado");
+            return next(new AppError('Concierto no encontrado', 404));
         } else {
-            res.status(500).json("Ha ocurrido un error");
+            return next(new AppError('Ha ocurrido un error', 500));
         }
     }
 }

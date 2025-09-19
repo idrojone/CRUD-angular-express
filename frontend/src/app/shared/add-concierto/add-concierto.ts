@@ -3,10 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Conciertos } from '../../core/models/conciertos.model';
 import { ApiService } from '../../core/services/api.service';
+import Swal from 'sweetalert2';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-add-concierto',
-    imports: [FormsModule], 
+    imports: [FormsModule, ReactiveFormsModule],
     templateUrl: './add-concierto.html',
     styleUrl: './add-concierto.css'
 })
@@ -19,10 +21,17 @@ export class AddConcierto implements OnInit {
         name: '',
         description: '',
         price: 0,
-        place: ''
+        place: '',
+        slug: ''
     };
 
     isEdit = false;
+    formConcierto = new FormGroup({
+        name: new FormControl('', Validators.required),
+        description: new FormControl('', Validators.required),
+        price: new FormControl(0, [Validators.required, Validators.min(0)]),
+        place: new FormControl('', Validators.required)
+    });
 
     constructor(
         private apiService: ApiService,
@@ -32,12 +41,19 @@ export class AddConcierto implements OnInit {
 
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
-            const id = params.get('id');
-            if (id) {
+            console.log(params);
+            const slug = params.get('slug');
+            if (slug) {
                 this.isEdit = true;
-                this.apiService.get(`/api/conciertos/${id}`).subscribe({
+                this.apiService.get(`/api/conciertos/${slug}`).subscribe({
                     next: (data) => {
                         this.concierto = data;
+                        this.formConcierto.patchValue({
+                            name: this.concierto.name,
+                            description: this.concierto.description,
+                            price: this.concierto.price,
+                            place: this.concierto.place
+                        })
                     },
                     error: (e) => console.error(e)
                 });
@@ -45,19 +61,59 @@ export class AddConcierto implements OnInit {
         });
     }
 
+    // saveConcierto(): void {
+    //     if (this.isEdit) {
+    //         this.apiService.put(`/api/conciertos/${this.concierto.slug}`, this.concierto).subscribe({
+    //             next: (res) => {
+    //                 // console.log('Concierto actualizado:', res);
+    //                 Swal.fire({
+    //                     title: 'Concierto actualizado',
+    //                     text: 'El concierto se ha actualizado correctamente.',
+    //                     icon: 'success'
+    //                 });
+    //                 this.router.navigate(['/conciertos']);
+    //             },
+    //             error: (e) => console.error(e)
+    //         });
+    //     } else {
+    //         this.apiService.post('/api/conciertos', this.concierto).subscribe({
+    //             next: (res) => {
+    //                 console.log('Concierto creado:', res);
+    //                 Swal.fire({
+    //                     title: 'Concierto creado',
+    //                     text: 'El concierto se ha creado correctamente.',
+    //                     icon: 'success'
+    //                 });
+    //                 this.router.navigate(['/conciertos']);
+    //             },
+    //             error: (e) => console.error(e)
+    //         });
+    //     }
+    // }
+
     saveConcierto(): void {
+        const conciertoData = this.formConcierto.value;
+
         if (this.isEdit) {
-            this.apiService.put(`/api/conciertos/${this.concierto._id}`, this.concierto).subscribe({
+            this.apiService.put(`/api/conciertos/${this.concierto.slug}`, conciertoData).subscribe({
                 next: (res) => {
-                    console.log('Concierto actualizado:', res);
+                    Swal.fire({
+                        title: 'Concierto actualizado',
+                        text: 'El concierto se ha actualizado correctamente.',
+                        icon: 'success'
+                    });
                     this.router.navigate(['/conciertos']);
                 },
                 error: (e) => console.error(e)
             });
         } else {
-            this.apiService.post('/api/conciertos', this.concierto).subscribe({
+            this.apiService.post('/api/conciertos', conciertoData).subscribe({
                 next: (res) => {
-                    console.log('Concierto creado:', res);
+                    Swal.fire({
+                        title: 'Concierto creado',
+                        text: 'El concierto se ha creado correctamente.',
+                        icon: 'success'
+                    });
                     this.router.navigate(['/conciertos']);
                 },
                 error: (e) => console.error(e)
@@ -71,7 +127,20 @@ export class AddConcierto implements OnInit {
             name: '',
             description: '',
             price: 0,
-            place: ''
+            place: '',
+            slug: ''
         };
+    }
+
+    onSubmit() {
+        if (this.formConcierto.valid) {
+            this.saveConcierto();
+        } else {
+            Swal.fire({
+                title: 'Formulario incompleto',
+                text: 'Por favor, rellena todos los campos obligatorios.',
+                icon: 'warning'
+            });
+        }
     }
 }
