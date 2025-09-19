@@ -57,8 +57,9 @@ async function create_concierto(req, res, next) {
 
 async function delete_concierto(req, res, next) {
     try {
-        const id = req.params.id;
-        const concierto = await Concierto.findByIdAndDelete(id);
+        // const id = req.params.id;
+        const slug = req.params.slug;
+        const concierto = await Concierto.findOne({ slug });
         if (concierto) {
             res.json(concierto);
         }
