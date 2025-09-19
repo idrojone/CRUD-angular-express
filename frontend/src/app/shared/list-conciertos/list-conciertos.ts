@@ -42,15 +42,16 @@ export class ListConciertos implements OnInit {
         );
     }
 
-    onConciertoEliminado(id: string): void {
-        this.ApiService.delete(`/api/conciertos/${id}`, {}).subscribe(
-            () => {
-                // this.removeConciertoFromList(id);
+    onConciertoEliminado(slug: string): void {
+        // console.log('Concierto eliminado con slug:', slug);
+        // return false;
+        this.ApiService.delete('/api/conciertos', slug).subscribe({
+            next: () => {
+                this.conciertos = this.conciertos.filter(c => c.slug !== slug);
             },
-            (error) => {
+            error: (error) => {
                 console.error('Error deleting concierto:', error);
             }
-        );
-        this.conciertos = this.conciertos.filter(c => c._id !== id);
+        });
     }
 }
