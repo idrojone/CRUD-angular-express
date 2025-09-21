@@ -28,10 +28,10 @@ export class AddConcierto implements OnInit {
     isEdit = false;
 
     formConcierto = new FormGroup({
-        name: new FormControl('', Validators.required),
-        description: new FormControl('', Validators.required),
+        name: new FormControl('', [Validators.required, Validators.minLength(1)]),
+        description: new FormControl('', [Validators.required, Validators.minLength(1)]),
         price: new FormControl(0, [Validators.required, Validators.min(0)]),
-        place: new FormControl('', Validators.required)
+        place: new FormControl('', [Validators.required, Validators.minLength(1)])
     });
 
     apiService = inject(ApiService);
@@ -59,36 +59,6 @@ export class AddConcierto implements OnInit {
             }
         });
     }
-
-    // saveConcierto(): void {
-    //     if (this.isEdit) {
-    //         this.apiService.put(`/api/conciertos/${this.concierto.slug}`, this.concierto).subscribe({
-    //             next: (res) => {
-    //                 // console.log('Concierto actualizado:', res);
-    //                 Swal.fire({
-    //                     title: 'Concierto actualizado',
-    //                     text: 'El concierto se ha actualizado correctamente.',
-    //                     icon: 'success'
-    //                 });
-    //                 this.router.navigate(['/conciertos']);
-    //             },
-    //             error: (e) => console.error(e)
-    //         });
-    //     } else {
-    //         this.apiService.post('/api/conciertos', this.concierto).subscribe({
-    //             next: (res) => {
-    //                 console.log('Concierto creado:', res);
-    //                 Swal.fire({
-    //                     title: 'Concierto creado',
-    //                     text: 'El concierto se ha creado correctamente.',
-    //                     icon: 'success'
-    //                 });
-    //                 this.router.navigate(['/conciertos']);
-    //             },
-    //             error: (e) => console.error(e)
-    //         });
-    //     }
-    // }
 
     saveConcierto(): void {
         const conciertoData = this.formConcierto.value;

@@ -1,7 +1,9 @@
 .footer {
-    background-color: #343a40;
-    color: #ffffff;
-    padding: 1rem 0;
+    background-color: #1a1a1a; 
+    color: #cccccc; 
+    padding: 1.5rem 0;
+    font-family: Arial, sans-serif;
+    font-size: 0.875rem;
 }
 
 .footer .container {
@@ -10,26 +12,33 @@
 
 .footer p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    color: #999999; 
 }
 
 .footer .list-inline {
-    margin: 0;
+    margin: 0.5rem 0 0;
     padding: 0;
     list-style: none;
 }
 
 .footer .list-inline-item {
     display: inline;
-    margin: 0 0.5rem;
+    margin: 0 0.75rem;
+    font-size: 0.875rem;
 }
 
 .footer .list-inline-item a {
-    color: #ffffff;
+    color: #ffffff; 
     text-decoration: none;
+    font-weight: bold;
     transition: color 0.3s ease;
 }
 
 .footer .list-inline-item a:hover {
-    color: #17a2b8;
+    color: #00aaff; 
+}
+
+.footer .list-inline-item {
+    color: #666666; 
 }
